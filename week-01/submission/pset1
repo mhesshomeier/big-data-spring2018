@@ -1,0 +1,31 @@
+# lists
+# Create a list with four Strings
+first_list = ['this', 'is', 'my','first', 'list']
+# print the third item in the list
+print(first_list[2])
+# print the first and second items in the list
+print(first_list[0:2])
+# add 'last' to the end of the list
+first_list.append('last')
+print(first_list)
+# print the list length
+print(len(first_list))
+# replace 'last' with 'new'
+first_list[5]='new'
+print(first_list)
+
+
+# strings
+# convert into a normal sentence
+sentence_words = ['I', 'am', 'learning', 'Python', 'to', 'munge', 'large', 'datasets', 'and', 'visualize', 'them']
+print(" ".join(sentence_words))
+print(sentence_words)
+# reverse the list
+list.reverse(sentence_words)
+print(sentence_words)
+# sort the list using default
+list.sort(sentence_words)
+print(sentence_words)
+sorted(sentence_words)
+# sorted returns the list sorted without the 'print' command,
+# list.sort changes the list itself and doesn't print it
