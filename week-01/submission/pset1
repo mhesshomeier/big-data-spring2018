@@ -27,5 +27,44 @@ print(sentence_words)
 list.sort(sentence_words)
 print(sentence_words)
 sorted(sentence_words)
-# sorted returns the list sorted without the 'print' command,
-# list.sort changes the list itself and doesn't print it
+# sorted returns the list sorted without the 'print' command, it's a function so the data must be explicity passed
+# list.sort changes the list itself and doesn't print it, it's a method, not a function
+# Random functions
+#checkout provided random integer function
+from random import randint
+# this returns random integer: 100 <= number <= 1000
+num = randint(100, 1000)
+#Create random integer generator with parameters supplied by the user
+def int_gen(x,y):
+    for i in range(y):
+        if i == 1:
+            x = 'hey'
+    # "return" indicates what values to output
+    return x
+print(int_gen(100,2))
+from random import randint
+# this returns random integer: 100 <= number <= 1000
+def randominteger(high, low=None):
+    if low is None:
+        low = 0
+    return randint(low,high)
+print(randominteger(10,100))
+assert(randominteger(10,100) > 101)
+
+# Write a function that
+def title_string(x,y):
+    book = 'The number {} bestseller today is: {}'.format(x,y)
+    return book
+x=10
+y='Fifty Shades of Grey'
+print(title_string(x,y))
+
+
+# create an exponent function
+def exp(x,y):
+    number = x
+    while y > 1:
+        number = x * (number)
+        y = y - 1
+    return number
+print(exp(2,5))
