@@ -32,17 +32,45 @@ import matplotlib.pylab as plt
 
 df = pd.read_csv('week-03/data/skyhook_2017-07.csv', sep=',')
 
+# check it output
+df.head
+## check out the data types
+df.dtypes
+## check out the shape
+df.shape
+# columns
+df.columns
+type(df.columns)
+
+
+bastille = df[df['date'] == '2017-07-14']
+bastille.head
+
+
 # Create a new date column formatted as datetimes.
 df['date_new'] = pd.to_datetime(df['date'], format='%Y-%m-%d')
+df['date_new'].head
 
 # Determine which weekday a given date lands on, and adjust it to account for the fact that '0' in our hours field corresponds to Sunday, but .weekday() returns 0 for Monday.
 df['weekday'] = df['date_new'].apply(lambda x: x.weekday() + 1)
 df['weekday'].replace(7, 0, inplace = True)
 
+#check it out
+df['weekday'].head
+
+# range
+range(0,10,1)
+
+
 # Remove hour variables outside of the 24-hour window corresponding to the day of the week a given date lands on.
 for i in range(0, 168, 24):
   j = range(0,168,1)[i - 5]
   if (j > i):
+      df['hour'].replace(range(i, i +19, 1), range(5, 24, 1), inplace = True) ## replacing the range from i to i+19 with 5 to 24
+      df['hour'].replace()
+  else:
+      df['hour'].replace(range(j, i + 19, 1), range(0, 24, 1), inplace = True) ## range (x, y, # by which you count)
+  if (j > i): ## i is the first hour of a day when a day runs from 0 to 23,
     df.drop(df[
     (df['weekday'] == (i/24)) &
     (
@@ -58,6 +86,11 @@ for i in range(0, 168, 24):
     )
     ].index, inplace = True)
 ```
+## when i = 0, J is 163,
+## go through and write out values while constructing the iterator
+## range (163,167,1)? with what? 19,24,1?
+
+
 
 ## Problem 1: Create a Bar Chart of Total Pings by Date
 
@@ -65,7 +98,28 @@ Your first task is to create a bar chart (not a line chart!) of the total count 
 
 ### Solution
 
+#df.plot for the plot, kind = bar to make it a bar chart (?), group count by date
+
 ```python
+
+df_test = df.groupby(['date_new'])
+df_test.plot(kind = 'Bar')
+
+#ax = df.plot(kind='bar', title ="GPS pings",figsize=(15,10),legend=True, fontsize=12)
+#ax.set_xlabel("date_new",fontsize=12)
+#ax.set_ylabel("count",fontsize=12)
+
+#df.plot(x='date_new', y='count', kind='bar')
+#plt.show()
+#x = df.groupby(['date_new'])
+#y = df(['count'])
+#plot.bar(x, y)
+
+##df_date = df.groupby(['date_new', 'count'])
+##df_date.plot(kind= 'bar')
+##df[['date_new', 'count']].plot(kind = 'bar')
+#    df.groupby('date_new')
+
 
 ```
 
