@@ -51,6 +51,11 @@ Once you've installed GDAL from KyngChaos, you'll have to add its location to yo
 ```python
 import sys
 sys.path.insert(0,'/Library/Frameworks/GDAL.framework/Versions/2.2/Python/3.6/site-packages')
+sys.path
+
+from osgeo import gdal
+
+
 ```
 
 You (should) only need to do this once.
@@ -85,7 +90,7 @@ import numpy as np
 import os
 %matplotlib inline
 ## make sure you set the DATA path to be to the folder where you downloaded the data at the beginning of class
-DATA = "/Users/ehuntley/Desktop/week-05/landsat"
+DATA = "/Users/meganhess-homeier/Desktop/ws04_materials"
 ```
 
 ## Calculating a Normalized Difference Vegetation Index
@@ -103,14 +108,16 @@ b4_raster = os.path.join(DATA, 'b4.tif')
 b5_raster = os.path.join(DATA, 'b5.tif')
 
 # Load in Red band
-red_data = gdal.Open(b4_raster)
-red_band = red_data.GetRasterBand(1)
-red = red_band.ReadAsArray()
+red_data = gdal.Open(b4_raster) # hey gdal, open a path to one of these rasters. b4 is our red data
+red_band = red_data.GetRasterBand(1) #red band of the visual spectrum
+red = red_band.ReadAsArray() # read full grid of raster values in as an array, then you can do a bunch of stuff like calculate mean, sum, anything you can do to a normal array
+
+## allows us to create a raster calculator like in GIS
 
 # Load in Near-infrasred band
-nir_data = gdal.Open(b5_raster)
+nir_data = gdal.Open(b5_raster) # same thing as above, open the raster in b5, which is the near infrared band and put it in a band
 nir_band = nir_data.GetRasterBand(1)
-nir = nir_band.ReadAsArray()
+nir = nir_band.ReadAsArray() # make it an arry so you can do stuff with it
 ```
 
 What we see above is `gdal` proceeding in three steps. It opens a connection to the file, obtains the raster band (all the data we'll be working with only contains band 1), and reads in a `numpy` array so that we can process it. We can see that these are `numpy` arrays by checking their type.
@@ -119,7 +126,7 @@ What we see above is `gdal` proceeding in three steps. It opens a connection to 
 type(nir)
 ```
 
-These `red` and `nir` arrays are what we will be working with to calculate our NDVI! First, let's examine one of them by plotting it using `matplotlib`'s `imshow` (image show) function:
+These `red` (red band data) and `nir` (near infrared data) arrays are what we will be working with to calculate our NDVI! First, let's examine one of them by plotting it using `matplotlib`'s `imshow` (image show) function:
 
 ```python
 # make sure you run these two lines at the same time or the color bar won't show up in your plot
@@ -129,6 +136,8 @@ plt.colorbar()
 
 This is aerial imagery conveniently cropped to the area surrounding Greater Boston. Next, let's define a function that will calculate our NDVI! Our `nir` and `red` variables are `numpy` arrays, which are vectorized; therefore we can add them, subtract them, etc. as we would the column of a `dataframe`.
 
+## check out NDVI documentation- the difference between red and nir
+
 ```python
 def ndvi_calc(red, nir):
     """ Calculate NDVI"""
@@ -136,6 +145,8 @@ def ndvi_calc(red, nir):
 ```
 
 Now let's run it!
+
+## problem: our data type doesn't support numbers with decimal points, doesn't know what to do with anything past the decimal. problems calculating things that will result in negative numbers and decimal points. need to convert to float32 format
 
 ```python
 # here we are calling our function within the plot!
@@ -176,10 +187,10 @@ Not only can we estimate tree cover, but we can also estimate land surface tempe
 So far, we've been working with the red and near-infrared bands. To calculate the surface temperature, we'll want to read in one of the thermal bands - these are very similar! For now, let's read in Band 10 and ensure that its stored as a floating point data type.
 
 ```python
-# Path of TIRS Band
+# Path of TIRS Band - thermal imaging '' sensor. this is temperature
 b10_raster = os.path.join(DATA, 'b10.TIF')
 
-# Load in TIRS Band
+# Load in TIRS Band, same process as before
 tirs_data = gdal.Open(b10_raster)
 tirs_band = tirs_data.GetRasterBand(1)
 tirs = tirs_band.ReadAsArray()
@@ -196,10 +207,12 @@ We now need to read in some correction values stored in the Landsat metadata in 
  But this sounds manual and sort of tedious... plus, we'd like to be able to replicate it over many Landsat datasets that we may download in the future. So let's look at a cooler way! We can read in the metatdata `txt` file and locate our variables of interest programmatically.
 
  Let's read the text file in as a Python list.
+## useful code ##
+
 
 ```python
 # make this path the local path to your MTL.txt file that you downloaded at the start of the workshop
-meta_file = '/Users/ehuntley/Desktop/week-05/landsat/MTL.txt'
+meta_file = '/Users/meganhess-homeier/Desktop/ws04_materials/MTL.txt'
 
 with open(meta_file) as f:
     meta = f.readlines()
@@ -211,7 +224,7 @@ Check out the format of the `meta` list; each line of the text file is stored as
 # Define terms to match
 matchers = ['RADIANCE_MULT_BAND_10', 'RADIANCE_ADD_BAND_10', 'K1_CONSTANT_BAND_10', 'K2_CONSTANT_BAND_10']
 
-[s for s in meta if any(xs in s for xs in matchers)]
+[s for s in meta if any(xs in s for xs in matchers)] # list comprehension
 ```
 
 We see that we've returned a list containing our variables and their values in the format `    RADIANCE_MULT_BAND_10 = 3.3420E-04\n` where `\n` is a line break character. We can use two string methods to first, split the resulting string at the `=` and return what comes after the equals sign (`.split(' = ')[1]`) and second, to strip the `\n` from the end (`.strip('\n')`). We finally coerce the resulting number to a floating point data type. Let's define a function to do this:
@@ -387,7 +400,7 @@ driver = gdal.GetDriverByName('GTiff')
 # so we can use the tirs_data size properties
 # Note that tirs_data = gdal.Open(b10_raster)
 # This is not the numpy array!
-new_dataset = driver.Create('/Users/ehuntley/Desktop/week-05/landsat/lst.tif',
+new_dataset = driver.Create('/Users/meganhess-homeier/Desktop/ws04_materials/lst.tif',
                     tirs_data.RasterXSize,
                     tirs_data.RasterYSize,
                     1,
