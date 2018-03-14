@@ -89,7 +89,7 @@ radius = '5mi'
 # See tweepy API reference for format specifications
 geocode_query = latlng + ',' + radius
 # set output file location
-file_name = 'data/pset3_test3.json'
+file_name = 'data/pset3_test2.json'
 # set threshold number of Tweets. Note that it's possible
 # to get more than one
 t_max = 80000
