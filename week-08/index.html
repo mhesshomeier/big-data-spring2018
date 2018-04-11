@@ -29,8 +29,23 @@ dataset -->
 <!-- script d3 within script tags within the html body, script tags basically say,
 anything that's within these two tags, interpret using javascript. -->
 <script>
-  var ratData = [40, 90, 30, 60]
+  // var ratData = [40, 90, 30, 60, 20, 40, 100]
 
+// create a variable to read in the CSV
+var neigh311 = [];
+// call the CSV
+d3.csv("data/neigh_311.csv", function(d) {
+  return {
+    neigh : d.neighborhood,
+    num_311 : +d.num_311
+  };
+  // preempt an error by making sure we read in the data fully before trying to draw
+  // the visualization
+}, function(error, rows) {
+  neigh311 = rows;
+  console.log(neigh311);
+  createVisualization();
+});
 
 // Generall in javascript you want to set a function, our stuff below is
 // an unnamed function
@@ -41,8 +56,31 @@ anything that's within these two tags, interpret using javascript. -->
 // }
 
 // need to use d3 to create the svg, the container that will house our variables
+function createVisualization() {
 var w = 150;
 var h = 175;
+
+// Problem, adding more data points doesn't result in all of the bars showing up because the size of the bars
+// needs to scale to fit in the size of the graphic (set above)
+// determine the length of the dataseg
+var arrayLength = neigh311.length;
+// +d indicates that the function needs to return a numeric value
+// +d.num_311 indicates the column of the data, use .columnName to call the column
+var maxValue = d3.max(neigh311, function(d) { return +d.num_311 });
+var x_axisLength = 100;
+var y_axisLength = 100;
+
+// the way to do this in d3 is by scaling
+// scale the values, whatever they are, to fit in the range of 100 set above
+var yScale = d3.scaleLinear()
+
+// The domain is the space between the values in the range, total range of possible values in the
+// dataset, mapping that onto a range from 0-100
+  .domain([0, maxValue])
+// set the range of the scale = to the y axislength
+  .range([0, y_axisLength]);
+
+
 // select the body- the body contained in the html body tas
 var svg = d3.select('body')
 // tag onto the end of the body tags an svg elements
@@ -53,13 +91,22 @@ var svg = d3.select('body')
   .attr('height', h);
 
 
+
+  // create a tooltip
+  var tooltiop = d3.select('body')
+    .append('div')
+    .style('position', 'absolute')
+    .style('font-family', "'Open Sans', sans-serif")
+    .style('font-size', '12px')
+
+// METHOD CHAINING
   // store create an array stored in a variable (rat data) that contains the values
   // we want (remember that blank space is unreadable in javascript so
   // indentations and spaces mean nothing)
   // select all rectangles in our page using the svg object we crated above
   svg.selectAll('rect')
   // bind rat data to rectangles
-    .data(ratData)
+    .data(neigh311)
     // enter in d3 defines a way to create new elements for an input array, ie,
     // if you select all rectangles but there are 3 rectangles and 6 data elements
     // enter will help you create new objects with .append
@@ -72,21 +119,29 @@ var svg = d3.select('body')
     // create a multiplier of the index position
     .attr('x', function(d,i) {
       // for the first rectangle,0, for the second, 25 (i*25), for the third, 50
-      return i*25 + 30;
+      // instead of multiplying y by a set number (in first version, 25), multiply it by the proportion of the
+      // x axis that the array represents
+      return i* (x_axisLength / arrayLength) + 30;
     })
     // since javascript automatically position from top left down, to position from a baseline
     // (like a normal bar chart), adjust y position, based on initial h variable (see above)
     // then subtract the y value that will position the bars on a bottom margin, ie,
     // use the data value
+    // d referes to the data set, so looking at an entire row in the csv, then return something from a
+    // specific column, so specify which column
     .attr('y', function(d) {
-      return h-d
+      // use h - yscale(d) instead of d, to indicate that we're calling the function above
+      // to scale the datapoint to our SVG
+      return h- yScale(d.num_311)
     })
     // shape for new rectangles
-    .attr('width', 20)
+    // instead of using a set width, width needs to be adjustable depending on the dataset
+    // in order to add a little space between bars, subtract a pixel from each side (-1)
+    .attr('width', (x_axisLength / arrayLength) - 1)
     // adjust height to a given data value
     // for our data value, the height is the data value
     .attr('height', function(d,i) {
-      return d
+      return yScale(d.num_311)
     })
     // color
     .attr('fill', 'steelblue')
@@ -94,7 +149,11 @@ var svg = d3.select('body')
     .attr('height', function (d) {
       // console log is basically the equivalent of print() in python
       console.log(d);
-      return d;
+      return d.num_311;
+    .attr('mouseover', function(d) {
+      return tooltip.style('top', (event.pageY - 10) + 'px').style('left',
+    (event.pageX + 10) +'px').text(d.neigh + ':'+d.num_311);
+    })
     });
     // when you finish a statement in javascript, end with a semicolon.
     // white space means nothing so you need to use something to indicate that you're done
@@ -123,7 +182,7 @@ svg.append('text')
 .text('no. of rats')
 .attr('transform', 'translate(20,20) rotate(-90)');
 
-
+};
 
 
 
