@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang = 'en'>
+<head>
+  <title>Mapping</title>
+  <script src = 'http://d3js.org/d3.v4.min.js' charset = 'utf-8'> </script>
+  <meta charset = 'utf-8'>
+<!-- call in geo json files from data, geo jsons are great for this because you can read
+it in as a javascript object without writing any javascript  -->
+  <script src = 'data/boston_neighborhoods.json'></script>
+  <script src='data/boston_rodents.json'></script>
+  <style>
+  .incident {
+    fill: steelBlue;
+  }
+  </style>
+</head>
+<body>
+  <script>
+// d3 always uses svg elements so the first step is to create an svg element
+// create global variables to set attributes of the SVG
+  var width = 700;
+  var height = 580;
+
+  var svg = d3.select('body')
+    .append('svg')
+    .attr('width', width)
+    .attr('height', height);
+// in mapping, best to work in groups. SVGs have 'g' elements that group items,
+// this is creating an empty element for us to put our objects in
+  var g = svg.append('g');
+  var rodents = svg.append('g');
+
+// in d3, can use whatever projection you want, pretty extensive documentation online, in GitHub
+var albersProjection = d3.geoAlbers()
+// this scale is appropriate for city of boston, for a larger map (ie, the US)
+// use a smaller number like 100, scale is not in brackets, brackets indicate a list
+  .scale(190000)
+// set the rotation, longitude
+  .rotate([71.057, 0])
+// specify the center, latitude setting a center at 42.313 degrees of latitude
+  .center([0, 42.313])
+// set the translation, taking our map and shifting the geometry.
+// coordinates in D3 are always thought of from the upper left. anything we draw in d3 will be
+// started in the upper left unless specified. So, we need to move it, to center it in the SVG
+// so, move it by half of the width and half of the height to find the center. This is
+// why we created global variables for width and height at the beginning
+  .translate([width/2, height/2 ]);
+// create an object that accepts paths, a path is a specific object in d3, allows you
+// to set the projection
+var geoPath =d3.geoPath()
+  .projection(albersProjection);
+
+// start to draw things in the g object we created, which we created to have something to
+// group our geomtries
+// select everything of a given type (path) whether it exists yet or not, then
+g.selectAll('path')
+  // bind data, read in features. geojsons are broken up into different properties, here we're
+  // reading in everythign contained in the feature list
+  .data(neighborhoods_json.features)
+  // currently not enough elements to bind data, need to specify an action to take when
+  // there are more elements than elements in the webpage
+  .enter()
+  .append('path')
+  .attr('fill', '#ccc')
+  .attr('stroke', '#333')
+// specify coordinate system, use geoPath object created before to specify the albers projection
+  .attr('d', geoPath);
+
+// add in rodent features, point data but everything is the same
+// append to a different group (rodents group) but the syntax is the same
+// g refers to g element type
+rodents.selectAll('path')
+  .data(rodents_json.features)
+  .enter()
+  .append('path')
+  .attr('fill', '#356')
+  .attr('stroke', '#999')
+  .attr('d', geoPath)
+  // give each rodent path (the points) a class, incident, that refers to a css
+
+  .attr('class', 'incident')
+
+
+  </script>
+
+</body>
+</html
