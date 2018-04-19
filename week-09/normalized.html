@@ -1,16 +1,5 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<html lang = 'en'>
-<head>
-  <title>Normalized Bar Chart</title>
-  <script src = 'http://d3js.org/d3.v4.min.js' charset = 'utf-8'> </script>
-  <meta charset = 'utf-8'>
-  <style>
-  .incident {
-    fill: steelBlue;
-  }
-  </style>
-
 <style>
 
 .bar {
@@ -46,12 +35,12 @@ var z = d3.scaleOrdinal()
 var stack = d3.stack()
     .offset(d3.stackOffsetExpand);
 
-d3.csv("data/neigh_311.csv", type, function(error, data) {
+d3.csv("data/neigh.csv", type, function(error, data) {
   if (error) throw error;
 
   data.sort(function(a, b) { return b[data.columns[1]] / b.total - a[data.columns[1]] / a.total; });
 
-  x.domain(data.map(function(d) { return d.Name; }));
+  x.domain(data.map(function(d) { return d.State; }));
   z.domain(data.columns.slice(1));
 
   var serie = g.selectAll(".serie")
@@ -63,7 +52,7 @@ d3.csv("data/neigh_311.csv", type, function(error, data) {
   serie.selectAll("rect")
     .data(function(d) { return d; })
     .enter().append("rect")
-      .attr("x", function(d) { return x(d.data.Name); })
+      .attr("x", function(d) { return x(d.data.State); })
       .attr("y", function(d) { return y(d[1]); })
       .attr("height", function(d) { return y(d[0]) - y(d[1]); })
       .attr("width", x.bandwidth());
@@ -84,7 +73,7 @@ d3.csv("data/neigh_311.csv", type, function(error, data) {
 
   var legend = serie.append("g")
       .attr("class", "legend")
-      .attr("transform", function(d) { var d = d[d.length - 1]; console.log(d); return "translate(" + (x(d.data.Name) + x.bandwidth()) + "," + ((y(d[0]) + y(d[1])) / 2) + ")"; });
+      .attr("transform", function(d) { var d = d[d.length - 1]; console.log(d); return "translate(" + (x(d.data.State) + x.bandwidth()) + "," + ((y(d[0]) + y(d[1])) / 2) + ")"; });
 
   legend.append("line")
       .attr("x1", -6)
@@ -97,26 +86,6 @@ d3.csv("data/neigh_311.csv", type, function(error, data) {
       .attr("fill", "#000")
       .style("font", "10px sans-serif")
       .text(function(d) { return d.key; });
-
-svg.append('text')
-    .attr('x', (width / 2))
-    .attr('y', (height - 415))
-    .attr("font-family", "sans-serif")
-    .attr("fill", "#000")
-    .attr("font-weight", "bold")
-    .attr('text-anchor', 'middle')
-    .style('font-size', '16px')
-    .style('text-decoration', 'underline')
-    .text('311 Calls in Boston by Neighborhood and Type');
-
-svg.append('text')
-    .attr('x', (width - 800))
-    .attr('y', 590)
-    .attr("font-family", "sans-serif")
-    .attr("fill", "#000")
-    .attr('text-anchor', 'bottom')
-    .style('font-size', '8px')
-    .text('Data: Analyze Boston, 311 service requests');
 });
 
 function type(d, i, columns) {
