@@ -1,0 +1,12 @@
+﻿dest_id,dest_name,dest_lat,dest_long,line,Notes
+70020,Downtown Crossing - to Forest Hills,42.355518,-71.060225,Orange,Used for trains coming inbound from Oak Grove (southbound)
+70021,Downtown Crossing - to Oak Grove,42.355518,-71.060225,Orange,Used for trains coming inbound from Forest Hils (northbound)
+70041,State Street - to Bowdoin,42.358978,-71.057598,Blue,Used for trains coming inbound from Wonderland (southbound)
+70042,State Street - to Wonderland,42.358978,-71.057598,Blue,Used for trains coming inbound from Bowdoin
+70077,Downtown Crossing - to Ashmont/Braintree,42.355518,-71.060225,Red,Used for trains coming inbound from Alewife (southbound)
+70078,Downtown Crossing - to Alewife,42.355518,-71.060225,Red,Used for trains coming inbound from Mattapan or Braintree (northbound)
+70196,Park Street - Green Line - B Branch Berth,42.35639457,-71.0624242,Green,Green Line is confusing because there are so many different lines - I think the Branch Berth destinations are only for trains coming from Lechmere but we might have to investigate more
+70197,Park Street - Green Line - C Branch Berth,42.35639457,-71.0624242,Green,Green Line is confusing because there are so many different lines - I think the Branch Berth destinations are only for trains coming from Lechmere but we might have to investigate more
+70198,Park Street - Green Line - D Branch Berth,42.35639457,-71.0624242,Green,Green Line is confusing because there are so many different lines - I think the Branch Berth destinations are only for trains coming from Lechmere but we might have to investigate more
+70199,Park Street - Green Line - E Branch Berth,42.35639457,-71.0624242,Green,E Line Berth is what I put for trains coming from Lechmere because it seems like the E line might be the only one that goes all the way to lechmere?
+70200,Park Street - Green Line Eastbound,42.35639457,-71.0624242,Green,"Used for trains coming inbound from Boston College (B line), Cleveland Circle (C line), Riverside (D line), or Heath (E line) (eastbound)"
