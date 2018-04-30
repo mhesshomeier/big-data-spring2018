@@ -72,8 +72,13 @@ len(url_list)
 
 
 # make a function that queries the mbta api
+#spider visualization is using json with 
 json_dict = {}
 for i in url_list:
     resp = requests.get(i)
     json_dict[i] = resp.json
     print(json_dict)
+
+
+with open ('data.txt', 'w') as outfile:
+    json.dump(json_dict, outfile)

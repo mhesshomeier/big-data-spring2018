@@ -1,0 +1,1 @@
+{"http://realtime.mbta.com/developer/api/v2.1/traveltimes?api_key=wX9NwuHnZU2ToO7GmGR9uw&format=json&from_stop=70001&to_stop=70021&from_datetime=1514419200&to_datetime=1514505600": 
