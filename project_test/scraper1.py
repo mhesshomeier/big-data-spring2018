@@ -3,7 +3,7 @@ import jsonpickle
 import pandas as pd
 import requests
 import csv
-
+import json
 # Set up api for MBTA
 MBTA_api = "wX9NwuHnZU2ToO7GmGR9uw"
 
@@ -72,8 +72,8 @@ len(url_list)
 
 
 # make a function that queries the mbta api
-namenumber = 0
+json_dict = {}
 for i in url_list:
     resp = requests.get(i)
-    data = resp.json
-    print(data)
+    json_dict[i] = resp.json
+    print(json_dict)
