@@ -25,7 +25,11 @@ origin_dest2.columns
 
 # set up a data frame to store api request addresses, created from the stops in the origin_dest2 file
 #http://realtime.mbta.com/developer/api/v2.1/traveltimes?api_key=wX9NwuHnZU2ToO7GmGR9uw&format=json&from_stop=11384&to_stop=70061&from_datetime=1514419200&to_datetime=1514505600
-
+# create a DataFrame
+# pass the origin/ destination to the dataframe as unique rows
+# with the url corresponding to that destination
+# add another column(s) and iterate through the urls to query the data and put it in the
+# columns according to the origin/ destination
 
 #create the URL calling from the origin_dest2 df
 def url_string(x,y):
@@ -72,7 +76,7 @@ len(url_list)
 
 
 # make a function that queries the mbta api
-#spider visualization is using json with 
+#spider visualization is using json with
 json_dict = {}
 for i in url_list:
     resp = requests.get(i)
