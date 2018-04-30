@@ -2,7 +2,7 @@
 import jsonpickle
 import pandas as pd
 import requests
-
+import csv
 
 # Set up api for MBTA
 MBTA_api = "wX9NwuHnZU2ToO7GmGR9uw"
@@ -41,14 +41,33 @@ def url_string(x,y):
 # for the url_string function
 for index, row in origin_dest2.iterrows():
     string = url_string(row["origin_id"], row["dest_id"])
+    string.to_csv(sep = ',')
     print(string)
 #pd.DataFrame(string)
 
+type(string)
+string.count()
+n.unique(string)
+len(string)
+pd.
 # read the urls stored in 'string' into a dataframe
 
 print(string)
 #convert the dataframe to csv
-string.to_csv('data/url.csv')
+string.to_csv()
+
+
+# try querying the mbta data with one link
+test = requests.get(string)
+print(test)
+test.json()
+
+# for each item in 'string' make a request to the url and store the response as a variable
+# write that variable to a json, with a name that indicates the line and stops in the url that
+# we used to request the information
+
+
+
 
 # make a function that queries the mbta api
 for index, row in string
