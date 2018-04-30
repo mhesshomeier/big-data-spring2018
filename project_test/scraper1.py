@@ -11,8 +11,7 @@ MBTA_api = "wX9NwuHnZU2ToO7GmGR9uw"
 import os
 os.chdir('project_test')
 
-# read in the origin csv
-origin_dest = pd.read_csv('data/origin_dest.csv', sep=',')
+
 #read in origin_dest2 csv with cbd lines removed
 origin_dest2 = pd.read_csv('data/origin_dest2.csv', sep=',')
 
@@ -39,27 +38,31 @@ def url_string(x,y):
 
 # iterate through the rows in the origin_dest2 dataframe with origin_id as x and dest_id as y
 # for the url_string function
+url_list = []
+print(url_list)
 for index, row in origin_dest2.iterrows():
     string = url_string(row["origin_id"], row["dest_id"])
-    print(string)
+    url_list.append(string)
+    print(url_list)
 #pd.DataFrame(string)
 
-type(string)
-string.count()
-n.unique(string)
-len(string)
-pd.DataFrame(string)
+# type(string)
+# string.count()
+# n.unique(string)
+# len(string)
+# pd.DataFrame(string)
 # read the urls stored in 'string' into a dataframe
 
-print(string)
+print(url_list)
+len(url_list)
 #convert the dataframe to csv
-string.to_csv()
+# string.to_csv()
 
 
 # try querying the mbta data with one link
-test = requests.get(string)
-print(test)
-test.json()
+# test = requests.get(string)
+# print(test)
+# test.json()
 
 # for each item in 'string' make a request to the url and store the response as a variable
 # write that variable to a json, with a name that indicates the line and stops in the url that
@@ -69,6 +72,8 @@ test.json()
 
 
 # make a function that queries the mbta api
-for index, row in string
-    data = requests.get()
-    data.json('data/data1.json')
+namenumber = 0
+for i in url_list:
+    resp = requests.get(i)
+    data = resp.json
+    print(data)
