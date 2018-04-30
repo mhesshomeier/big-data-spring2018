@@ -41,7 +41,6 @@ def url_string(x,y):
 # for the url_string function
 for index, row in origin_dest2.iterrows():
     string = url_string(row["origin_id"], row["dest_id"])
-    string.to_csv(sep = ',')
     print(string)
 #pd.DataFrame(string)
 
@@ -49,7 +48,7 @@ type(string)
 string.count()
 n.unique(string)
 len(string)
-pd.
+pd.DataFrame(string)
 # read the urls stored in 'string' into a dataframe
 
 print(string)
