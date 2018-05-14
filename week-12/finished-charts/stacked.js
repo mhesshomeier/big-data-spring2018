@@ -18,7 +18,6 @@ var z = d3.scaleOrdinal()
 d3.csv("data/neigh_311.csv", function(d, i, columns) {
   for (i = 1, t = 0; i < columns.length; ++i) {
     t += d[columns[i]] = +d[columns[i]];
-    console.log(d[columns[i]])
   }
   d.total = t;
   return d;
@@ -41,7 +40,10 @@ d3.csv("data/neigh_311.csv", function(d, i, columns) {
     .enter().append("rect")
       .attr("x", function(d) { return x(d.data.Name); })
       .attr("y", function(d) { return y(d[1]); })
-      .attr("height", function(d) { return y(d[0]) - y(d[1]); })
+
+      .attr("height", function(d) {
+        console.log('d is: ', d);
+        return y(d[0]) - y(d[1]); })
       .attr("width", x.bandwidth());
 
   g.append("g")
